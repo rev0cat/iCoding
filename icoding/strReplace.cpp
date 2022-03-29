@@ -1,5 +1,6 @@
+#include "dsstring.h"
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 void *Memset(void *s, int c, size_t n) {
     char *p = (char *) s;
