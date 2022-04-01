@@ -2,50 +2,45 @@
 #include <stdlib.h>
 #include "list.h" // 请不要删除，否则检查不通过
 
-bool init_queue(LinkQueue *LQ)
-{
-	(*LQ) = (LinkQueue*)malloc(sizeof(LinkQueue));
-	(*LQ)->next = (*LQ);
-	if ((*LQ) != NULL){
-	    return 1;
-	}
-	return 0;
-}
-
-bool enter_queue(LinkQueue *LQ, ElemType x)
-{
-	LinkQueueNode* p;
-	LinkQueueNode* new;
-	new = (LinkQueueNode*)malloc(sizeof(LinkQueueNode));
-	p = (*LQ);
-	if(new!=NULL){
-	new->data = x;
-	new->next = p->next;
-	p->next = new;
-	(*LQ) = new;
-	return 1;
-	}
-	else{return 0;}
-}
-
-bool leave_queue(LinkQueue *LQ, ElemType *x)
-{
-	LinkQueueNode *p;
-	if((*LQ)->next == (*LQ)){
-	    return 0;
-	}
-	p = (*LQ);
-	if(p->next->next == p){
-	    *x = (*LQ)->data;
-	    p = p->next;
-	    p->next = p;
-	    free (*LQ);
-	    (*LQ) = p;
-	}else{
-	    p = p->next->next;
-	    (*LQ)->next->next = p->next;
-	    *x = p->data;
-	    free(p);
-	}
-    return 1;
+int compute_reverse_polish_notation(char *str){
+    Stack num;
+    init_stack(&num);
+    int num1,num2,i=0;
+    while(str[i]!='\0'){
+        if(str[i]!=' '){
+            if(str[i]>='0'&&str[i]<='9'){
+                int pushnum = 0;
+                while(str[i]!=' '){
+                pushnum = pushnum * 10 + str[i] - '0';
+                i++;
+                }
+                push(&num,pushnum);
+            }else{
+                pop(&num,&num2);
+                pop(&num,&num1);
+                switch(str[i]){
+                    case '+':{
+                        num1 += num2;
+                        break;}
+                    case '-':{
+                        num1 -= num2;
+                        break;}
+                    case '*':{
+                        num1 *= num2;
+                        break;}
+                    case '/':{
+                        num1 /= num2;
+                        break;}
+                    case '%':{
+                        num1 %= num2;
+                        break;
+                    }
+                }
+                push(&num,num1);
+            }
+        }
+        i++;
+    }
+    pop(&num,&num1);
+    return num1;
 }
